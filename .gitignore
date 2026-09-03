@@ -1,0 +1,10 @@
+venv/
+.env
+__pycache__/
+*.pyc
+.DS_Store
+
+.vscode/
+
+ml/data/transaction_features.csv
+ml/data/transaction_predictions.csv

@@ -7,9 +7,7 @@ import numpy as np
 import pandas as pd
 
 
-# ============================================================
-# CONFIGURATION
-# ============================================================
+
 
 NUM_AGENTS = 50
 NUM_CUSTOMERS = 5000
@@ -22,9 +20,6 @@ random.seed(RANDOM_SEED)
 np.random.seed(RANDOM_SEED)
 
 
-# ============================================================
-# AGENT TYPES
-# ============================================================
 
 AGENT_TYPES = [
     "finance",
@@ -35,9 +30,9 @@ AGENT_TYPES = [
 ]
 
 
-# ============================================================
+
 # NORMAL BEHAVIOR FOR EACH AGENT TYPE
-# ============================================================
+
 
 AGENT_BEHAVIOR = {
 
@@ -88,9 +83,9 @@ AGENT_BEHAVIOR = {
 }
 
 
-# ============================================================
+
 # DATA DIRECTORIES
-# ============================================================
+
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
 
@@ -99,9 +94,9 @@ DATA_DIR = PROJECT_ROOT / "ml" / "data"
 DATA_DIR.mkdir(parents=True, exist_ok=True)
 
 
-# ============================================================
+
 # 1. GENERATE AGENTS
-# ============================================================
+
 
 def generate_agents(count):
 
@@ -120,9 +115,9 @@ def generate_agents(count):
     return pd.DataFrame(agents)
 
 
-# ============================================================
+
 # 2. GENERATE CUSTOMERS
-# ============================================================
+
 
 def generate_customers(count):
 
@@ -139,9 +134,9 @@ def generate_customers(count):
     return pd.DataFrame(customers)
 
 
-# ============================================================
+
 # 3. GENERATE BENEFICIARIES
-# ============================================================
+
 
 def generate_beneficiaries(count):
 
@@ -157,9 +152,9 @@ def generate_beneficiaries(count):
     return pd.DataFrame(beneficiaries)
 
 
-# ============================================================
+
 # HELPER FUNCTIONS
-# ============================================================
+
 
 def generate_device_id():
 
@@ -212,9 +207,9 @@ def generate_amount(agent_type):
     return round(float(amount), 2)
 
 
-# ============================================================
+
 # 4. GENERATE NORMAL TRANSACTION
-# ============================================================
+
 
 def generate_normal_transaction(
     transaction_number,
@@ -277,9 +272,9 @@ def generate_normal_transaction(
     }
 
 
-# ============================================================
+
 # 5. GENERATE ANOMALOUS TRANSACTION
-# ============================================================
+
 
 def generate_anomalous_transaction(
     transaction_number,
@@ -308,9 +303,9 @@ def generate_anomalous_transaction(
 
     behavior = AGENT_BEHAVIOR[agent_type]
 
-    # --------------------------------------------
+
     # LARGE AMOUNT
-    # --------------------------------------------
+
 
     if anomaly_type == "LARGE_AMOUNT":
 
@@ -331,9 +326,9 @@ def generate_anomalous_transaction(
         ip_address = generate_ip_address()
 
 
-    # --------------------------------------------
+
     # UNUSUAL TIME
-    # --------------------------------------------
+
 
     elif anomaly_type == "UNUSUAL_TIME":
 
@@ -358,9 +353,9 @@ def generate_anomalous_transaction(
         ip_address = generate_ip_address()
 
 
-    # --------------------------------------------
+
     # NEW BENEFICIARY
-    # --------------------------------------------
+
 
     elif anomaly_type == "NEW_BENEFICIARY":
 
@@ -378,9 +373,9 @@ def generate_anomalous_transaction(
         ip_address = generate_ip_address()
 
 
-    # --------------------------------------------
+
     # TRANSACTION BURST
-    # --------------------------------------------
+
 
     elif anomaly_type == "TRANSACTION_BURST":
 
@@ -405,9 +400,9 @@ def generate_anomalous_transaction(
         ip_address = generate_ip_address()
 
 
-    # --------------------------------------------
+
     # DEVICE CHANGE
-    # --------------------------------------------
+
 
     elif anomaly_type == "DEVICE_CHANGE":
 
@@ -425,9 +420,9 @@ def generate_anomalous_transaction(
         ip_address = generate_ip_address()
 
 
-    # --------------------------------------------
+
     # IP CHANGE
-    # --------------------------------------------
+
 
     else:
 
@@ -482,9 +477,9 @@ def generate_anomalous_transaction(
     }
 
 
-# ============================================================
+
 # 6. GENERATE TRANSACTIONS
-# ============================================================
+
 
 def generate_transactions(
     agents_df,
@@ -540,9 +535,8 @@ def generate_transactions(
     return pd.DataFrame(transactions)
 
 
-# ============================================================
-# 7. MAIN PROGRAM
-# ============================================================
+
+
 
 def main():
 
@@ -661,9 +655,6 @@ def main():
     )
 
 
-# ============================================================
-# RUN PROGRAM
-# ============================================================
 
 if __name__ == "__main__":
     main()

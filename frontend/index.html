@@ -1,0 +1,582 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AgentShield</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+            background: #0b1020;
+            color: #f5f7ff;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1250px;
+            margin: auto;
+            padding: 30px;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .brand h1 {
+            font-size: 30px;
+        }
+
+        .brand p {
+            color: #8d96ad;
+            margin-top: 5px;
+        }
+
+        .shield {
+            font-size: 42px;
+        }
+
+        .cards {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 18px;
+            margin-bottom: 25px;
+        }
+
+        .card {
+            background: #141a2d;
+            border: 1px solid #252d45;
+            border-radius: 14px;
+            padding: 22px;
+        }
+
+        .card-title {
+            color: #8d96ad;
+            font-size: 14px;
+        }
+
+        .card-value {
+            font-size: 30px;
+            font-weight: 700;
+            margin-top: 8px;
+        }
+
+        .main-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .panel {
+            background: #141a2d;
+            border: 1px solid #252d45;
+            border-radius: 14px;
+            padding: 24px;
+        }
+
+        .panel h2 {
+            font-size: 20px;
+            margin-bottom: 20px;
+        }
+
+        .agent {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 0;
+            border-bottom: 1px solid #252d45;
+        }
+
+        .agent:last-child {
+            border-bottom: none;
+        }
+
+        .agent-name {
+            font-weight: 600;
+        }
+
+        .agent-type {
+            color: #8d96ad;
+            font-size: 13px;
+            margin-top: 4px;
+        }
+
+        .trust {
+            text-align: right;
+        }
+
+        .trust-score {
+            font-weight: 700;
+        }
+
+        .status {
+            display: inline-block;
+            margin-top: 5px;
+            padding: 4px 9px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 600;
+        }
+
+        .active {
+            background: #123b2b;
+            color: #55e6a5;
+        }
+
+        .monitored {
+            background: #3d3210;
+            color: #ffd45a;
+        }
+
+        .restricted {
+            background: #3d2410;
+            color: #ff9f5a;
+        }
+
+        .quarantined {
+            background: #421b24;
+            color: #ff687d;
+        }
+
+        label {
+            display: block;
+            color: #aab2c7;
+            font-size: 13px;
+            margin-bottom: 7px;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 11px;
+            border-radius: 8px;
+            border: 1px solid #303950;
+            background: #0d1324;
+            color: white;
+            margin-bottom: 15px;
+            outline: none;
+        }
+
+        button {
+            width: 100%;
+            padding: 13px;
+            border: none;
+            border-radius: 8px;
+            background: #5b6cff;
+            color: white;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        button:hover {
+            opacity: 0.9;
+        }
+
+        .result {
+            margin-top: 20px;
+            display: none;
+        }
+
+        .decision {
+            text-align: center;
+            font-size: 28px;
+            font-weight: 800;
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 15px;
+        }
+
+        .allow {
+            background: #123b2b;
+            color: #55e6a5;
+        }
+
+        .review {
+            background: #3d3210;
+            color: #ffd45a;
+        }
+
+        .block {
+            background: #421b24;
+            color: #ff687d;
+        }
+
+        .result-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+        }
+
+        .result-item {
+            background: #0d1324;
+            padding: 12px;
+            border-radius: 8px;
+        }
+
+        .result-item span {
+            display: block;
+            color: #8d96ad;
+            font-size: 12px;
+            margin-bottom: 4px;
+        }
+
+        .reasons {
+            margin-top: 15px;
+        }
+
+        .reason {
+            padding: 8px 0;
+            color: #c7cede;
+            font-size: 13px;
+        }
+
+        .loading {
+            color: #8d96ad;
+            text-align: center;
+            padding: 20px;
+        }
+
+        @media (max-width: 850px) {
+            .cards,
+            .main-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <header>
+        <div class="brand">
+            <h1>🛡️ AgentShield</h1>
+            <p>AI Agent Trust, Risk & Security Layer</p>
+        </div>
+        <div class="shield">🔐</div>
+    </header>
+
+    <section class="cards">
+        <div class="card">
+            <div class="card-title">AI Agents</div>
+            <div class="card-value" id="agentCount">-</div>
+        </div>
+
+        <div class="card">
+            <div class="card-title">Active Agents</div>
+            <div class="card-value" id="activeCount">-</div>
+        </div>
+
+        <div class="card">
+            <div class="card-title">Monitored</div>
+            <div class="card-value" id="monitoredCount">-</div>
+        </div>
+
+        <div class="card">
+            <div class="card-title">System Status</div>
+            <div class="card-value">SECURE</div>
+        </div>
+    </section>
+
+    <section class="main-grid">
+
+        <div class="panel">
+            <h2>🤖 AI Agents</h2>
+            <div id="agents">
+                <div class="loading">Loading agents...</div>
+            </div>
+        </div>
+
+        <div class="panel">
+
+            <h2>⚡ Transaction Security Check</h2>
+
+            <form id="transactionForm">
+
+                <label>AI Agent</label>
+                <select id="agent" required></select>
+
+                <label>Action</label>
+                <select id="action" required>
+                    <option value="PAYMENT">PAYMENT</option>
+                    <option value="PAYOUT">PAYOUT</option>
+                    <option value="REFUND">REFUND</option>
+                    <option value="PAYMENT_LINK">PAYMENT_LINK</option>
+                </select>
+
+                <label>Amount (INR)</label>
+                <input id="amount" type="number" value="5000" min="1" required>
+
+                <label>Beneficiary ID</label>
+                <input id="beneficiary" type="number" value="101" required>
+
+                <label>Device ID</label>
+                <input id="device" value="device_001" required>
+
+                <label>IP Address</label>
+                <input id="ip" value="192.168.1.10" required>
+
+                <button type="submit">Analyze Transaction</button>
+
+            </form>
+
+            <div class="result" id="result">
+
+                <div class="decision" id="decision"></div>
+
+                <div class="result-grid">
+
+                    <div class="result-item">
+                        <span>Risk Score</span>
+                        <strong id="riskScore"></strong>
+                    </div>
+
+                    <div class="result-item">
+                        <span>Trust Score</span>
+                        <strong id="trustScore"></strong>
+                    </div>
+
+                    <div class="result-item">
+                        <span>Policy</span>
+                        <strong id="policy"></strong>
+                    </div>
+
+                    <div class="result-item">
+                        <span>Permission</span>
+                        <strong id="permission"></strong>
+                    </div>
+
+                    <div class="result-item">
+                        <span>Gateway</span>
+                        <strong id="gateway"></strong>
+                    </div>
+
+                    <div class="result-item">
+                        <span>Executed</span>
+                        <strong id="executed"></strong>
+                    </div>
+
+                </div>
+
+                <div class="reasons">
+                    <h3>Why?</h3>
+                    <div id="reasons"></div>
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+</div>
+
+<script>
+
+const API = "http://127.0.0.1:8000";
+
+let agents = [];
+
+async function loadAgents() {
+
+    try {
+
+        const response = await fetch(`${API}/agents/`);
+        agents = await response.json();
+
+        document.getElementById("agentCount").textContent = agents.length;
+
+        document.getElementById("activeCount").textContent =
+            agents.filter(a => a.status === "ACTIVE").length;
+
+        document.getElementById("monitoredCount").textContent =
+            agents.filter(a => a.status === "MONITORED").length;
+
+        const agentList = document.getElementById("agents");
+        const selector = document.getElementById("agent");
+
+        agentList.innerHTML = "";
+        selector.innerHTML = "";
+
+        agents.forEach(agent => {
+
+            const div = document.createElement("div");
+
+            const statusClass =
+                agent.status.toLowerCase();
+
+            div.className = "agent";
+
+            div.innerHTML = `
+                <div>
+                    <div class="agent-name">${agent.name}</div>
+                    <div class="agent-type">${agent.agent_type}</div>
+                </div>
+
+                <div class="trust">
+                    <div class="trust-score">
+                        ${agent.trust_score}%
+                    </div>
+                    <span class="status ${statusClass}">
+                        ${agent.status}
+                    </span>
+                </div>
+            `;
+
+            agentList.appendChild(div);
+
+            const option = document.createElement("option");
+
+            option.value = agent.id;
+            option.textContent =
+                `${agent.name} (${agent.agent_type})`;
+
+            selector.appendChild(option);
+
+        });
+
+    } catch (error) {
+
+        document.getElementById("agents").innerHTML =
+            "<div class='loading'>Unable to connect to AgentShield API</div>";
+
+        console.error(error);
+    }
+}
+
+
+document
+.getElementById("transactionForm")
+.addEventListener("submit", async function(event) {
+
+    event.preventDefault();
+
+    const resultBox = document.getElementById("result");
+
+    resultBox.style.display = "block";
+
+    document.getElementById("decision").textContent =
+        "ANALYZING...";
+
+    try {
+
+        const payload = {
+
+            agent_id: Number(
+                document.getElementById("agent").value
+            ),
+
+            action_type:
+                document.getElementById("action").value,
+
+            amount: Number(
+                document.getElementById("amount").value
+            ),
+
+            beneficiary_id: Number(
+                document.getElementById("beneficiary").value
+            ),
+
+            device_id:
+                document.getElementById("device").value,
+
+            ip_address:
+                document.getElementById("ip").value
+        };
+
+        const response = await fetch(
+            `${API}/transactions/check`,
+            {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(payload)
+            }
+        );
+
+        const data = await response.json();
+
+        if (!response.ok) {
+            throw new Error(data.detail || "Transaction failed");
+        }
+
+        const decision =
+            data.final_decision;
+
+        const decisionBox =
+            document.getElementById("decision");
+
+        decisionBox.textContent =
+            decision;
+
+        decisionBox.className =
+            "decision " + decision.toLowerCase();
+
+        document.getElementById("riskScore").textContent =
+            data.risk_score;
+
+        document.getElementById("trustScore").textContent =
+            data.trust_score;
+
+        document.getElementById("policy").textContent =
+            data.policy_decision;
+
+        document.getElementById("permission").textContent =
+            data.permission_decision;
+
+        document.getElementById("gateway").textContent =
+            data.gateway_status;
+
+        document.getElementById("executed").textContent =
+            data.transaction_executed ? "YES" : "NO";
+
+        const reasons =
+            document.getElementById("reasons");
+
+        reasons.innerHTML = "";
+
+        data.final_reasons.forEach(reason => {
+
+            const div =
+                document.createElement("div");
+
+            div.className = "reason";
+
+            div.textContent = "• " + reason;
+
+            reasons.appendChild(div);
+
+        });
+
+        await loadAgents();
+
+    } catch (error) {
+
+        document.getElementById("decision").textContent =
+            "ERROR";
+
+        document.getElementById("reasons").innerHTML =
+            `<div class="reason">${error.message}</div>`;
+
+        console.error(error);
+    }
+
+});
+
+loadAgents();
+
+</script>
+
+</body>
+</html>
